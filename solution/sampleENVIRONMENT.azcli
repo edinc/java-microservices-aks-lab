@@ -1,10 +1,10 @@
 az login --use-device-code
 az account list -o table
 
-UNIQUEID=<your-unique-id>
+UNIQUEID=e94dde
 APPNAME=petclinic
 RESOURCE_GROUP=rg-$APPNAME-$UNIQUEID
-LOCATION=northeurope
+LOCATION=westeurope
 MYACR=acr$APPNAME$UNIQUEID
 az acr login --name $MYACR
 
@@ -14,7 +14,7 @@ SUBNET_ID=$(az network vnet subnet show --resource-group $RESOURCE_GROUP --vnet-
 AKSCLUSTER=aks-$APPNAME-$UNIQUEID
 MYSQL_SERVER_NAME=mysql-$APPNAME-$UNIQUEID
 MYSQL_ADMIN_USERNAME=myadmin
-MYSQL_ADMIN_PASSWORD=<your-admin-pw>
+MYSQL_ADMIN_PASSWORD=
 DATABASE_NAME=petclinic
 NAMESPACE=spring-petclinic
 VERSION=3.0.2
