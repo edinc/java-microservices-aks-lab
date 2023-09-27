@@ -19,10 +19,18 @@ DATABASE_NAME=petclinic
 NAMESPACE=spring-petclinic
 VERSION=3.0.2
 
+WORKSPACE=la-$APPNAME-$UNIQUEID
+WORKSPACEID=$(az monitor log-analytics workspace show -n $WORKSPACE -g $RESOURCE_GROUP --query id -o tsv)
+
+AINAME=ai-$APPNAME-$UNIQUEID
+AI_CONNECTIONSTRING=$(az monitor app-insights component show --app $AINAME -g $RESOURCE_GROUP --query connectionString)
+
 KEYVAULT_NAME=kv-$APPNAME-$UNIQUEID
 GIT_PAT=<your-gh-PAT>
 
 AKS_OIDC_ISSUER=<your-oidc-issuer>
+USER_ASSIGNED_IDENTITY_NAME=uid-$APPNAME-$UNIQUEID
+USER_ASSIGNED_CLIENT_ID="$(az identity show --resource-group "${RESOURCE_GROUP}" --name "${USER_ASSIGNED_IDENTITY_NAME}" --query 'clientId' -otsv)"
 FEDERATED_IDENTITY_CREDENTIAL_NAME=fedid-$APPNAME-$UNIQUEID
 ADTENANT=<your-tenant-id>
 
