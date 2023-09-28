@@ -49,3 +49,34 @@ EVENTHUB_ID=$(az eventhubs namespace show --name $EVENTHUBS_NAMESPACE --resource
 STORAGE_ACCOUNT_NAME=stg$APPNAME$UNIQUEID
 STORAGE_CONTAINER=eventhubs-binder
 
+APPLICATION_GATEWAY_SUBNET_CIDR=10.1.2.0/24
+APPLICATION_GATEWAY_SUBNET_NAME=app-gw-subnet
+
+DNS_LABEL=$APPNAME$UNIQUEID
+DNS_NAME=sampleapp.${DNS_LABEL}.com
+
+CERT_NAME_IN_KV=$APPNAME-certificate
+
+APPLICATION_GATEWAY_PUBLIC_IP_NAME=pip-$APPNAME-app-gw
+
+APPGW_IDENTITY_NAME=id-$APPNAME-appgw
+APPGW_IDENTITY_CLIENTID=$(az identity show --resource-group $RESOURCE_GROUP --name $APPGW_IDENTITY_NAME --query clientId --output tsv)
+APPGW_IDENTITY_OID=$(az ad sp show --id $APPGW_IDENTITY_CLIENTID --query id --output tsv)
+
+KEYVAULT_SECRET_ID_FOR_CERT=$(az keyvault certificate show --name $CERT_NAME_IN_KV --vault-name $KEYVAULT_NAME --query sid --output tsv)
+
+WAF_POLICY_NAME=waf-$APPNAME-$UNIQUEID
+
+APPGW_NAME=agw-$APPNAME-$UNIQUEID
+
+PRIVATE_ENDPOINTS_SUBNET_CIDR=10.1.4.0/24
+PRIVATE_ENDPOINTS_SUBNET_NAME=private-endpoints-subnet
+
+MYSQL_RESOURCE_ID=$(az resource show -g $RESOURCE_GROUP -n $MYSQL_SERVER_NAME --resource-type "Microsoft.DBforMySQL/flexibleServers" --query "id" -o tsv)
+MYSQL_NIC_ID=$(az network private-endpoint show --name pe-openlab-mysql --resource-group $RESOURCE_GROUP --query 'networkInterfaces[0].id' -o tsv)
+MYSQL_NIC_IPADDRESS=$(az resource show --ids $MYSQL_NIC_ID --api-version 2019-04-01 -o json | jq -r '.properties.ipConfigurations[0].properties.privateIPAddress')
+
+KEYVAULT_RESOURCE_ID=$(az resource show -g ${RESOURCE_GROUP} -n ${KEYVAULT_NAME} --query "id" --resource-typ "Microsoft.KeyVault/vaults" -o tsv)
+
+KEYVAULT_NIC_ID=$(az network private-endpoint show --name pe-openlab-keyvault --resource-group $RESOURCE_GROUP --query 'networkInterfaces[0].id' -o tsv)
+KEYVAULT_NIC_IPADDRESS=$(az resource show --ids $KEYVAULT_NIC_ID --api-version 2019-04-01 -o json | jq -r '.properties.ipConfigurations[0].properties.privateIPAddress')
